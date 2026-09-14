@@ -1,4 +1,9 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 import { 
   LayoutDashboard, 
   BookOpen, 
@@ -17,7 +22,7 @@ const menuItems = [
   {
     group: 'Principal',
     items: [
-      { name: 'Inicio', icon: LayoutDashboard, path: '/dashboard' },
+      { name: 'Inicio', icon: LayoutDashboard, path: '/' },
     ]
   },
   {
@@ -60,11 +65,40 @@ const menuItems = [
 ];
 
 export default function Sidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [user, setUser] = useState<{ email?: string; user_metadata?: { full_name?: string } } | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    supabase.auth.getUser().then(({ data }) => {
+      if (data?.user) {
+        setUser(data.user);
+      }
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      authListener?.subscription?.unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/login');
+    router.refresh();
+  };
+
   return (
     <aside className="w-64 h-screen bg-secondary-900 text-slate-300 flex flex-col sticky top-0">
       {/* Logo Section */}
       <div className="p-6 border-b border-secondary-800">
-        <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary-500/20">
             PB
           </div>
@@ -72,7 +106,7 @@ export default function Sidebar() {
             <h1 className="text-white font-bold text-sm leading-tight">PROFE. BYRON</h1>
             <p className="text-[10px] text-secondary-400 uppercase tracking-wider">Gestión Docente</p>
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* Navigation */}
@@ -83,19 +117,26 @@ export default function Sidebar() {
               {group.group}
             </h3>
             <div className="space-y-1">
-              {group.items.map((item) => (
-                <a 
-                  key={item.name} 
-                  href={item.path} 
-                  className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-secondary-800 hover:text-white transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <item.icon size={18} className="text-secondary-400 group-hover:text-primary-400 transition-colors" />
-                    <span className="text-sm font-medium">{item.name}</span>
-                  </div>
-                  <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-              ))}
+              {group.items.map((item) => {
+                const isActive = pathname === item.path;
+                return (
+                  <Link 
+                    key={item.name} 
+                    href={item.path} 
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg transition-all group ${
+                      isActive 
+                        ? 'bg-primary-600 text-white shadow-md shadow-primary-900/30 font-medium' 
+                        : 'hover:bg-secondary-800 hover:text-white text-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <item.icon size={18} className={`${isActive ? 'text-white' : 'text-secondary-400 group-hover:text-primary-400'} transition-colors`} />
+                      <span className="text-sm font-medium">{item.name}</span>
+                    </div>
+                    <ChevronRight size={14} className={`${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
+                  </Link>
+                );
+              })}
             </div>
           </div>
         ))}
@@ -103,15 +144,23 @@ export default function Sidebar() {
 
       {/* User Footer */}
       <div className="p-4 border-t border-secondary-800 bg-secondary-950">
-        <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary-800 transition-colors cursor-pointer">
-          <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs font-bold">
-            BV
+        <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary-800 transition-colors">
+          <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs font-bold uppercase">
+            {user?.email ? user.email.slice(0, 2) : 'BV'}
           </div>
           <div className="flex-1 overflow-hidden">
-            <p className="text-sm font-medium text-white truncate">Byron Vera</p>
-            <p className="text-[10px] text-secondary-400 truncate">Docente & Tutor</p>
+            <p className="text-sm font-medium text-white truncate">
+              {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Byron Vera'}
+            </p>
+            <p className="text-[10px] text-secondary-400 truncate">
+              {user ? 'Sesión Activa' : 'Docente & Tutor'}
+            </p>
           </div>
-          <button className="text-secondary-500 hover:text-red-400 transition-colors">
+          <button 
+            onClick={handleLogout}
+            className="text-secondary-500 hover:text-red-400 transition-colors p-1 rounded"
+            title="Cerrar Sesión"
+          >
             <LogOut size={16} />
           </button>
         </div>

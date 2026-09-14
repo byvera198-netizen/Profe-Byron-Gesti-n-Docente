@@ -6,7 +6,9 @@ import {
   AlertTriangle, 
   TrendingUp, 
   CheckCircle2, 
-  Clock 
+  Clock,
+  BookOpen,
+  ChevronRight
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -30,7 +32,7 @@ export default function Dashboard() {
       <header className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Buenos días, Profe. Byron 👋</h1>
-          <p className="text-slate-500">Unidad Educativa "Técnica Nacional" | Año Lectivo 2026-2027</p>
+          <p className="text-slate-500">Unidad Educativa &quot;Técnica Nacional&quot; | Año Lectivo 2026-2027</p>
         </div>
         <div className="flex gap-3">
           <button className="btn-secondary flex items-center gap-2">
@@ -149,12 +151,4 @@ export default function Dashboard() {
       </div>
     </div>
   );
-}
-
-// Helper to avoid import errors in this isolated snippet
-function BookOpen(props: any) {
-  return <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
-}
-function ChevronRight(props: any) {
-  return <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>;
 }

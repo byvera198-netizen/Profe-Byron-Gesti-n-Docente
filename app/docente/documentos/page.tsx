@@ -11,10 +11,10 @@ export default function DocumentsPage() {
   ];
 
   const myDocuments = [
-    { name: 'Consolidado_2BGU_A_2026.pdf', type: 'pdf' as const, date: '2026-06-15', size: '1.2 MB', status: 'completed' },
-    { name: 'Acta_Supletorios_ECA_A.pdf', type: 'pdf' as const, date: '2026-06-20', size: '850 KB', status: 'completed' },
-    { name: 'Nomina_Estudiantes_Export.xlsx', type: 'xlsx' as const, date: '2026-05-10', size: '45 KB', status: 'completed' },
-    { name: 'Reporte_Cualitativo_General.pdf', type: 'pdf' as const, date: '2026-06-18', size: '2.1 MB', status: 'review' },
+    { name: 'Consolidado_2BGU_A_2026.pdf', type: 'pdf' as const, date: '2026-06-15', size: '1.2 MB', status: 'completed' as const },
+    { name: 'Acta_Supletorios_ECA_A.pdf', type: 'pdf' as const, date: '2026-06-20', size: '850 KB', status: 'completed' as const },
+    { name: 'Nomina_Estudiantes_Export.xlsx', type: 'xlsx' as const, date: '2026-05-10', size: '45 KB', status: 'completed' as const },
+    { name: 'Reporte_Cualitativo_General.pdf', type: 'pdf' as const, date: '2026-06-18', size: '2.1 MB', status: 'review' as const },
   ];
 
   return (
