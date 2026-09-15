@@ -1,47 +1,71 @@
 # 🎓 Profe. Byron Gestión Docente
-**Plataforma inteligente para la gestión académica, documental y Juntas de Curso.**
+**Plataforma Integral e Inteligente para la Gestión Académica, Calificaciones, Tutorías y Juntas de Curso.**
 
-## 🏗️ Arquitectura Técnica
-- **Frontend:** Next.js 14 (App Router) + TypeScript + Tailwind CSS.
-- **Backend/DB:** Supabase (PostgreSQL + Auth + Storage).
-- **Despliegue:** Vercel.
-- **Diseño:** UI Premium con Shadcn UI.
+---
 
-## 🚀 Guía de Instalación y Configuración (MVP)
+## 🌟 Características Principales
 
-### 1. Configuración de Supabase
-1. Crea una cuenta gratuita en [supabase.com](https://supabase.com).
-2. Crea un nuevo proyecto llamado `profe-byron-gestion-docente`.
-3. Ve al **SQL Editor** en el panel de Supabase.
-4. Copia el contenido del archivo `schema.sql` de este repositorio y ejecútalo para crear todas las tablas, relaciones y políticas de seguridad (RLS).
-5. En **Authentication** $\rightarrow$ **Providers**, habilita el proveedor de **Google** (requiere Client ID y Secret de Google Cloud, o puedes usar Email/Password para pruebas iniciales).
+### 👨‍🏫 Espacio Docente
+- **Insumos y Actividades:** Creación y ponderación de insumos (individuales, grupales, evaluaciones, proyectos) con cálculo automático del 100%.
+- **Registro de Calificaciones:** Planilla reactiva de notas con cálculo de promedios ponderados en tiempo real y persistencia.
+- **Planes de Mejora Académica:** Gestión de refuerzo pedagógico con sustitución automática de la calificación más baja sobre 10.
+- **Sábana Consolidada:** Consolidado anual y trimestral (33% Q1, 33% Q2, 34% Q3) con determinación oficial automática (Promovido, Supletorio, Remedial).
+- **Gestión Documental:** Archivo institucional con carpetas, visor, filtros y descarga directa de respaldos.
 
-### 2. Configuración del Proyecto Local
-1. Clona este repositorio o abre la carpeta en VS Code.
-2. Crea un archivo `.env.local` en la raíz con las siguientes variables:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_clave_anonima_de_supabase
-   ```
-3. Instala las dependencias:
-   ```bash
-   npm install
-   ```
-4. Ejecuta el servidor de desarrollo:
+### 👥 Módulo de Tutoría y Juntas
+- **Mi Curso:** Vista general de estudiantes a cargo, semáforo académico de riesgo y estadísticas de rendimiento.
+- **Asistente de Juntas de Curso:** Asistente interactivo en 3 pasos (Revisión de Agenda, Análisis de Rendimiento, Acuerdos y Compromisos).
+- **Actas Oficiales Imprimibles:** Generador de actas de junta con formato oficial del Ministerio de Educación, nómina de docentes asistentes y firmas de rectorado, secretaría y tutoría (optimizada para impresión o PDF).
+
+### ⚙️ Administración Institucional
+- **Cursos y Paralelos:** Creación dinámica de niveles educativos y gestión de paralelos (A, B, C...).
+- **Malla Curricular:** Catálogo completo de asignaturas con carga horaria y áreas de conocimiento.
+- **Importador Masivo de Estudiantes:** Carga de nóminas completas mediante archivos CSV y exportación en 1 clic.
+- **Control de Usuarios y Roles:** Aprobación, suspensión e invitación de usuarios (Docentes, Tutores, Directivos, Administradores).
+- **Historial de Auditoría:** Registro cronológico de modificaciones y acciones con exportación en CSV.
+
+---
+
+## 🚀 Inicio Rápido (Modo Operativo Inmediato)
+
+La plataforma cuenta con un **modo autónomo con persistencia local** que permite probarla y operarla de inmediato sin dependencias externas:
+
+1. Inicia el servidor de desarrollo:
    ```bash
    npm run dev
    ```
-
-### 3. Despliegue en Vercel
-1. Conecta tu repositorio de GitHub a [vercel.com](https://vercel.com).
-2. Agrega las mismas variables de entorno del `.env.local` en el panel de Vercel.
-3. Haz el deploy.
-
-## 🗺️ Mapa de Módulos
-- **Admin:** Gestión de Instituciones $\rightarrow$ Usuarios $\rightarrow$ Cursos $\rightarrow$ Asignaturas.
-- **Docente:** Gestión de Estudiantes $\rightarrow$ Insumos $\rightarrow$ Calificaciones $\rightarrow$ Consolidado.
-- **Tutor:** Dashboard de Curso $\rightarrow$ Rendimiento $\rightarrow$ Juntas de Curso $\rightarrow$ Actas.
-- **Soporte:** Auditoría de cambios y almacenamiento en Supabase Storage.
+2. Abre tu navegador en [http://localhost:3000](http://localhost:3000).
+3. Para ingresar, puedes usar los botones de **Acceso Rápido de Prueba** en la pantalla de login:
+   - **Docente / Tutor:** Acceso como `Byron Vera` (`byron.vera@colegio.edu.ec`).
+   - **Administrador:** Acceso con privilegios institucionales (`admin@colegio.edu.ec`).
 
 ---
-**Desarrollado por Hermes Agent bajo la dirección del Profe. Byron.**
+
+## 🗄️ Conexión con Supabase (Producción / Nube)
+
+Si deseas sincronizar los datos en la nube con Supabase:
+
+1. Crea un proyecto en [supabase.com](https://supabase.com).
+2. Ve al **SQL Editor** en el panel de Supabase y pega el contenido de `schema.sql` para crear todas las tablas, relaciones y políticas RLS.
+3. Configura tus credenciales en `.env.local`:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key-de-supabase
+   ```
+4. La aplicación detectará automáticamente las credenciales remotas y sincronizará en tiempo real con Supabase.
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+- **Framework:** Next.js 14 (App Router)
+- **Lenguaje:** TypeScript
+- **Estilos:** Tailwind CSS
+- **Iconos:** Lucide React
+- **Base de Datos & Auth:** Supabase (PostgreSQL, Row-Level Security, Auth)
+- **Validación:** ESLint + TypeScript strict checks
+
+---
+
+**Desarrollado para la optimización de la gestión docente de la Unidad Educativa Técnica Nacional.**
+

@@ -7,9 +7,12 @@ interface DocumentCardProps {
   date: string;
   size: string;
   status: 'completed' | 'draft' | 'review';
+  onView?: () => void;
+  onDownload?: () => void;
+  onDelete?: () => void;
 }
 
-export default function DocumentCard({ name, type, date, size, status }: DocumentCardProps) {
+export default function DocumentCard({ name, type, date, size, status, onView, onDownload, onDelete }: DocumentCardProps) {
   const typeColors = {
     pdf: 'bg-red-100 text-red-600',
     xlsx: 'bg-emerald-100 text-emerald-600',
@@ -34,13 +37,25 @@ export default function DocumentCard({ name, type, date, size, status }: Documen
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <button className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-all" title="Ver documento">
+        <button 
+          onClick={onView}
+          className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-all" 
+          title="Ver documento"
+        >
           <Eye size={16} />
         </button>
-        <button className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-emerald-600 transition-all" title="Descargar">
+        <button 
+          onClick={onDownload}
+          className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-emerald-600 transition-all" 
+          title="Descargar"
+        >
           <Download size={16} />
         </button>
-        <button className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-red-600 transition-all" title="Eliminar">
+        <button 
+          onClick={onDelete}
+          className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-red-600 transition-all" 
+          title="Eliminar"
+        >
           <Trash2 size={16} />
         </button>
       </div>

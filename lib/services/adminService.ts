@@ -316,5 +316,90 @@ export const adminService = {
       localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(updated));
     }
     return updated;
+  },
+
+  // 4. SUBJECTS
+  async getSubjects(): Promise<SubjectAdminItem[]> {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('pb_admin_subjects');
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch {}
+      }
+      localStorage.setItem('pb_admin_subjects', JSON.stringify(DEFAULT_SUBJECTS));
+    }
+    return DEFAULT_SUBJECTS;
+  },
+
+  async createSubject(subject: Omit<SubjectAdminItem, 'id'>): Promise<SubjectAdminItem> {
+    const current = await this.getSubjects();
+    const newSubject: SubjectAdminItem = {
+      ...subject,
+      id: 'sub-' + Date.now(),
+    };
+    const updated = [...current, newSubject];
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('pb_admin_subjects', JSON.stringify(updated));
+    }
+    return newSubject;
+  },
+
+  async deleteSubject(id: string): Promise<SubjectAdminItem[]> {
+    const current = await this.getSubjects();
+    const updated = current.filter(s => s.id !== id);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('pb_admin_subjects', JSON.stringify(updated));
+    }
+    return updated;
+  },
+
+  // 5. INSTITUTION CONFIG
+  async getInstitutionConfig() {
+    const defaultConfig = {
+      name: 'Unidad Educativa Técnica Nacional',
+      code: '17H00123',
+      address: 'Av. América y Universitaria, Quito - Ecuador',
+      phone: '022345678',
+      email: 'rectorado@tecnicanacional.edu.ec',
+      currentYear: '2026-2027',
+    };
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('pb_admin_config');
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch {}
+      }
+      localStorage.setItem('pb_admin_config', JSON.stringify(defaultConfig));
+    }
+    return defaultConfig;
+  },
+
+  async saveInstitutionConfig(config: any) {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('pb_admin_config', JSON.stringify(config));
+    }
+    return config;
   }
 };
+
+export interface SubjectAdminItem {
+  id: string;
+  code: string;
+  name: string;
+  area: string;
+  level: string;
+  weeklyHours: number;
+  teachersCount: number;
+}
+
+const DEFAULT_SUBJECTS: SubjectAdminItem[] = [
+  { id: '1', code: 'MAT-01', name: 'Matemáticas', area: 'Ciencias Exactas', level: 'BGU', weeklyHours: 5, teachersCount: 3 },
+  { id: '2', code: 'LEN-02', name: 'Lengua y Literatura', area: 'Lenguaje y Comunicación', level: 'BGU', weeklyHours: 5, teachersCount: 3 },
+  { id: '3', code: 'ECA-03', name: 'Educación Cultural y Artística', area: 'Artes y Humanidades', level: 'BGU', weeklyHours: 2, teachersCount: 2 },
+  { id: '4', code: 'FIS-04', name: 'Física', area: 'Ciencias Naturales', level: 'BGU', weeklyHours: 4, teachersCount: 2 },
+  { id: '5', code: 'ING-05', name: 'Inglés', area: 'Lenguas Extranjeras', level: 'BGU', weeklyHours: 5, teachersCount: 2 },
+  { id: '6', code: 'SOR-06', name: 'Sistemas Operativos y Redes', area: 'Técnica Informática', level: 'BT Informática', weeklyHours: 6, teachersCount: 2 },
+];
+

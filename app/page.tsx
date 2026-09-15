@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { 
   Users, 
   FileText, 
@@ -12,12 +13,12 @@ import {
 } from 'lucide-react';
 
 export default function Dashboard() {
-  // Mock data for the dashboard
+  // Stats for the dashboard with direct links
   const stats = [
-    { label: 'Estudiantes', value: '124', icon: Users, color: 'text-blue-600', bg: 'bg-blue-100' },
-    { label: 'Asignaturas', value: '4', icon: BookOpen, color: 'text-indigo-600', bg: 'bg-indigo-100' },
-    { label: 'Documentos', value: '12', icon: FileText, color: 'text-emerald-600', bg: 'bg-emerald-100' },
-    { label: 'Juntas Pendientes', value: '2', icon: Calendar, color: 'text-amber-600', bg: 'bg-amber-100' },
+    { label: 'Estudiantes', value: '124', icon: Users, color: 'text-blue-600', bg: 'bg-blue-100', href: '/docente/estudiantes' },
+    { label: 'Asignaturas', value: '6', icon: BookOpen, color: 'text-indigo-600', bg: 'bg-indigo-100', href: '/docente/asignaturas' },
+    { label: 'Documentos', value: '12', icon: FileText, color: 'text-emerald-600', bg: 'bg-emerald-100', href: '/docente/documentos' },
+    { label: 'Juntas Pendientes', value: '2', icon: Calendar, color: 'text-amber-600', bg: 'bg-amber-100', href: '/tutor/junta' },
   ];
 
   const alerts = [
@@ -35,29 +36,33 @@ export default function Dashboard() {
           <p className="text-slate-500">Unidad Educativa &quot;Técnica Nacional&quot; | Año Lectivo 2026-2027</p>
         </div>
         <div className="flex gap-3">
-          <button className="btn-secondary flex items-center gap-2">
+          <Link href="/tutor/junta" className="btn-secondary flex items-center gap-2">
             <Calendar size={18} />
-            <span>Agenda</span>
-          </button>
-          <button className="btn-primary flex items-center gap-2">
+            <span>Agenda Juntas</span>
+          </Link>
+          <Link href="/docente/consolidado" className="btn-primary flex items-center gap-2 shadow-lg shadow-primary-500/20">
             <FileText size={18} />
             <span>Generar Reporte</span>
-          </button>
+          </Link>
         </div>
       </header>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, i) => (
-          <div key={i} className="glass-card p-6 rounded-2xl flex items-center gap-4">
-            <div className={`p-3 rounded-xl ${stat.bg} ${stat.color}`}>
+          <Link 
+            key={i} 
+            href={stat.href}
+            className="glass-card p-6 rounded-2xl flex items-center gap-4 hover:border-primary-300 transition-all group cursor-pointer"
+          >
+            <div className={`p-3 rounded-xl ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform`}>
               <stat.icon size={24} />
             </div>
             <div>
               <p className="text-sm text-slate-500 font-medium">{stat.label}</p>
-              <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
+              <p className="text-2xl font-bold text-slate-900 group-hover:text-primary-600 transition-colors">{stat.value}</p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -70,19 +75,23 @@ export default function Dashboard() {
                 <AlertTriangle className="text-amber-500" size={20} />
                 <h2 className="font-bold text-slate-800">Alertas Académicas (Semáforo)</h2>
               </div>
-              <button className="text-sm text-primary-600 font-medium hover:underline">Ver todas</button>
+              <Link href="/tutor/rendimiento" className="text-sm text-primary-600 font-medium hover:underline">
+                Ver todas
+              </Link>
             </div>
             <div className="divide-y divide-slate-100">
               {alerts.map((alert) => (
                 <div key={alert.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-4">
-                    <div className={`w-2 h-2 rounded-full ${alert.severity === 'critical' ? 'bg-red-500' : 'bg-amber-500'}`} />
+                    <div className={`w-2.5 h-2.5 rounded-full ${alert.severity === 'critical' ? 'bg-red-500 animate-pulse' : 'bg-amber-500'}`} />
                     <div>
                       <p className="text-sm font-bold text-slate-800">{alert.student}</p>
                       <p className="text-xs text-slate-500">{alert.subject} • {alert.issue}</p>
                     </div>
                   </div>
-                  <button className="text-xs btn-secondary py-1 px-3">Gestionar</button>
+                  <Link href="/docente/mejoras" className="text-xs btn-secondary py-1.5 px-3 font-semibold">
+                    Gestionar Mejora
+                  </Link>
                 </div>
               ))}
             </div>
@@ -96,21 +105,22 @@ export default function Dashboard() {
             </div>
             <div className="space-y-4">
               {[
-                { action: 'Subió notas de ECA', time: 'Hace 2 horas', icon: CheckCircle2, color: 'text-emerald-500' },
-                { action: 'Programó Junta de Curso 2BGU-A', time: 'Ayer', icon: Calendar, color: 'text-blue-500' },
-                { action: 'Actualizó observaciones cualitativas', time: 'Hace 3 días', icon: FileText, color: 'text-indigo-500' },
+                { action: 'Subió notas de ECA', time: 'Hace 2 horas', icon: CheckCircle2, color: 'text-emerald-500', link: '/docente/calificaciones' },
+                { action: 'Programó Junta de Curso 2BGU-A', time: 'Ayer', icon: Calendar, color: 'text-blue-500', link: '/tutor/junta' },
+                { action: 'Actualizó consolidado trimestral', time: 'Hace 3 días', icon: FileText, color: 'text-indigo-500', link: '/docente/consolidado' },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors">
-                  <div className={`p-2 rounded-lg bg-slate-100 ${item.color}`}>
+                <Link key={i} href={item.link} className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                  <div className={`p-2 rounded-lg bg-slate-100 ${item.color} group-hover:scale-110 transition-transform`}>
                     <item.icon size={16} />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-slate-700">{item.action}</p>
+                    <p className="text-sm font-medium text-slate-700 group-hover:text-primary-600 transition-colors">{item.action}</p>
                     <p className="text-xs text-slate-400 flex items-center gap-1">
                       <Clock size={12} /> {item.time}
                     </p>
                   </div>
-                </div>
+                  <ChevronRight size={14} className="text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
               ))}
             </div>
           </div>
@@ -121,29 +131,46 @@ export default function Dashboard() {
           <div className="glass-card rounded-2xl p-6 bg-primary-900 text-white border-none shadow-xl shadow-primary-900/20">
             <h3 className="font-bold text-lg mb-4">Acceso Rápido</h3>
             <div className="space-y-3">
-              <button className="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-between group">
+              <Link 
+                href="/docente/insumos" 
+                className="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-between group"
+              >
                 <span className="text-sm font-medium">Registrar Insumo</span>
                 <ChevronRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
-              <button className="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-between group">
-                <span className="text-sm font-medium">Generar Acta</span>
+              </Link>
+              <Link 
+                href="/tutor/actas" 
+                className="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-between group"
+              >
+                <span className="text-sm font-medium">Generar Acta Oficial</span>
                 <ChevronRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
-              <button className="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-between group">
-                <span className="text-sm font-medium">Ver Consolidado</span>
+              </Link>
+              <Link 
+                href="/docente/consolidado" 
+                className="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-between group"
+              >
+                <span className="text-sm font-medium">Ver Consolidado de Notas</span>
                 <ChevronRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
+              </Link>
             </div>
           </div>
 
           <div className="glass-card rounded-2xl p-6">
             <h3 className="font-bold text-slate-800 mb-4">Mis Cursos Actuales</h3>
             <div className="space-y-2">
-              {['2do BGU - A', '2do BGU - B', '3ro BGU - A'].map((course) => (
-                <div key={course} className="p-3 rounded-xl border border-slate-100 flex items-center justify-between hover:border-primary-200 transition-colors cursor-pointer">
-                  <span className="text-sm font-medium text-slate-600">{course}</span>
+              {[
+                { name: '2do BGU - A', href: '/docente/cursos' },
+                { name: '2do BGU - B', href: '/docente/cursos' },
+                { name: '3ro BGU - A', href: '/docente/cursos' },
+              ].map((course) => (
+                <Link 
+                  key={course.name} 
+                  href={course.href}
+                  className="p-3 rounded-xl border border-slate-100 flex items-center justify-between hover:border-primary-300 hover:bg-slate-50 transition-all cursor-pointer group"
+                >
+                  <span className="text-sm font-medium text-slate-700 group-hover:text-primary-600 transition-colors">{course.name}</span>
                   <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                </div>
+                </Link>
               ))}
             </div>
           </div>

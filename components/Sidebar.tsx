@@ -67,29 +67,51 @@ const menuItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = useState<{ email?: string; user_metadata?: { full_name?: string } } | null>(null);
+  const [user, setUser] = useState<{ email?: string; name?: string; role?: string; user_metadata?: { full_name?: string } } | null>(null);
 
   useEffect(() => {
-    const supabase = createClient();
+    const checkUser = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.auth.getUser();
 
-    supabase.auth.getUser().then(({ data }) => {
       if (data?.user) {
         setUser(data.user);
+      } else if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('pb_active_user');
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            setUser(parsed);
+          } catch (e) {}
+        }
       }
-    });
+    };
 
+    checkUser();
+
+    const supabase = createClient();
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      if (session?.user) {
+        setUser(session.user);
+      }
     });
 
     return () => {
       authListener?.subscription?.unsubscribe();
     };
-  }, []);
+  }, [pathname]);
 
   const handleLogout = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+    } catch (e) {}
+
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('pb_active_user');
+      document.cookie = 'pb_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
+    setUser(null);
     router.push('/login');
     router.refresh();
   };
@@ -145,20 +167,20 @@ export default function Sidebar() {
       {/* User Footer */}
       <div className="p-4 border-t border-secondary-800 bg-secondary-950">
         <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary-800 transition-colors">
-          <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs font-bold uppercase">
-            {user?.email ? user.email.slice(0, 2) : 'BV'}
+          <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm">
+            {user?.name ? user.name.slice(0, 2) : (user?.email ? user.email.slice(0, 2) : 'BV')}
           </div>
           <div className="flex-1 overflow-hidden">
             <p className="text-sm font-medium text-white truncate">
-              {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Byron Vera'}
+              {user?.user_metadata?.full_name || user?.name || user?.email?.split('@')[0] || 'Byron Vera'}
             </p>
-            <p className="text-[10px] text-secondary-400 truncate">
-              {user ? 'Sesión Activa' : 'Docente & Tutor'}
+            <p className="text-[10px] text-secondary-400 truncate font-semibold">
+              {user?.role || (user ? 'Docente & Tutor' : 'Docente & Tutor')}
             </p>
           </div>
           <button 
             onClick={handleLogout}
-            className="text-secondary-500 hover:text-red-400 transition-colors p-1 rounded"
+            className="text-secondary-500 hover:text-red-400 transition-colors p-1.5 rounded-lg hover:bg-secondary-900"
             title="Cerrar Sesión"
           >
             <LogOut size={16} />

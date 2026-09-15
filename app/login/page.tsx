@@ -15,11 +15,36 @@ export default function LoginPage() {
 
   const supabase = createClient();
 
+  const isSupabaseConfigured = () => {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    return !!url && !url.includes('your-project') && !url.includes('placeholder');
+  };
+
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage(null);
     setSuccessMessage(null);
+
+    // If Supabase is not configured with real remote credentials, use seamless local session
+    if (!isSupabaseConfigured()) {
+      setTimeout(() => {
+        const isAdmin = email.toLowerCase().includes('admin');
+        const userObj = {
+          email,
+          name: isAdmin ? 'Administrador General' : 'Byron Vera',
+          role: isAdmin ? 'Administrador' : 'Docente & Tutor',
+        };
+        localStorage.setItem('pb_active_user', JSON.stringify(userObj));
+        document.cookie = 'pb_session=active; path=/; max-age=86400';
+        setSuccessMessage('¡Inicio de sesión exitoso! Ingresando a la plataforma...');
+        setTimeout(() => {
+          router.push('/');
+          router.refresh();
+        }, 500);
+      }, 400);
+      return;
+    }
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -44,6 +69,12 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setLoading(true);
     setErrorMessage(null);
+
+    if (!isSupabaseConfigured()) {
+      handleDemoLogin('docente');
+      return;
+    }
+
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -62,15 +93,26 @@ export default function LoginPage() {
     }
   };
 
-  // Demo access to explore the platform without pre-seeded Supabase credentials
+  // Instant demo access: logs in immediately without waiting
   const handleDemoLogin = (role: 'docente' | 'admin') => {
-    if (role === 'docente') {
-      setEmail('byron.vera@colegio.edu.ec');
-    } else {
-      setEmail('admin@colegio.edu.ec');
-    }
+    setLoading(true);
+    const isDoc = role === 'docente';
+    const emailVal = isDoc ? 'byron.vera@colegio.edu.ec' : 'admin@colegio.edu.ec';
+    const nameVal = isDoc ? 'Byron Vera' : 'Administrador General';
+    const roleVal = isDoc ? 'Docente & Tutor' : 'Administrador';
+
+    setEmail(emailVal);
     setPassword('Demo2026!');
-    setSuccessMessage(`Credenciales de prueba cargadas para rol: ${role.toUpperCase()}`);
+
+    const userObj = { email: emailVal, name: nameVal, role: roleVal };
+    localStorage.setItem('pb_active_user', JSON.stringify(userObj));
+    document.cookie = 'pb_session=active; path=/; max-age=86400';
+
+    setSuccessMessage(`¡Bienvenido! Accediendo como ${roleVal.toUpperCase()}...`);
+    setTimeout(() => {
+      router.push('/');
+      router.refresh();
+    }, 400);
   };
 
   return (

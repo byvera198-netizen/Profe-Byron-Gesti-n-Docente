@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Settings, Save, Building, Calendar, Shield, Percent, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Settings, Save, Building, Calendar, Shield, Percent, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { adminService } from '@/lib/services/adminService';
 
 export default function AdminConfigPage() {
   const [instConfig, setInstConfig] = useState({
@@ -12,6 +13,23 @@ export default function AdminConfigPage() {
     email: 'rectorado@tecnicanacional.edu.ec',
     currentYear: '2026-2027',
   });
+
+  const [saving, setSaving] = useState(false);
+  const [savedMessage, setSavedMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    adminService.getInstitutionConfig().then(cfg => {
+      if (cfg) setInstConfig(cfg);
+    });
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    await adminService.saveInstitutionConfig(instConfig);
+    setSaving(false);
+    setSavedMessage('Configuración institucional guardada exitosamente');
+    setTimeout(() => setSavedMessage(null), 3500);
+  };
 
   const [periods, setPeriods] = useState([
     { id: '1', name: 'I Trimestre / Período', weight: 33, startDate: '2026-09-01', endDate: '2026-11-28', status: 'Activo' },
@@ -26,11 +44,22 @@ export default function AdminConfigPage() {
           <h1 className="text-3xl font-bold text-slate-900">Configuración Institucional</h1>
           <p className="text-slate-500">Parámetros globales, periodos académicos y ponderaciones.</p>
         </div>
-        <button className="btn-primary flex items-center gap-2">
+        <button 
+          onClick={handleSave}
+          disabled={saving}
+          className="btn-primary flex items-center gap-2 shadow-lg shadow-primary-500/20"
+        >
           <Save size={18} />
-          <span>Guardar Cambios</span>
+          <span>{saving ? 'Guardando...' : 'Guardar Cambios'}</span>
         </button>
       </header>
+
+      {savedMessage && (
+        <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-sm flex items-center gap-2">
+          <CheckCircle2 size={16} />
+          <span>{savedMessage}</span>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Institution Details */}
