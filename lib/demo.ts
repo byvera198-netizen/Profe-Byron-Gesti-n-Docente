@@ -1,0 +1,2 @@
+import type {GradeRow} from './calculations';
+export function emptyDemoRow(studentId:string,i:number,a:number,p:number):GradeRow{const base=[8.5,9.3,6.2,7.8,9.7,5.1,8.2,7.1,8.9,6.4,9.2,7.5][i];return {studentId,individual:Array.from({length:9},(_,j)=>Math.min(10,Math.max(0,base+((j+a+p)%3)*.2))),group:Array.from({length:9},(_,j)=>Math.min(10,base+((j+p)%3)*.1)),exam:base,project:Math.min(10,base+.3),direct:null,reinforcement:null,workshop:null,makeup:null,observation:'Registro sintético para explorar la aplicación.'};}
