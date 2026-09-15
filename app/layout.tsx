@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./workspace.css";
+import "./acceso/acceso.css";
 
 export const metadata: Metadata = {
   title: "Profe. Byron · Gestión Docente",

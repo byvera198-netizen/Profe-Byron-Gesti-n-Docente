@@ -6,8 +6,15 @@ export class AppError extends Error{constructor(message:string,public status=400
 export const uid=()=>crypto.randomUUID();
 export const now=()=>new Date().toISOString();
 export const parse=(r:any)=>({...r,...JSON.parse(r.payload||'{}')});
-export async function identity(){const u=await getChatGPTUser();if(u)return u;const token=(await cookies()).get('byron_session')?.value;if(token){const hash=await hashToken(token),s=await one('SELECT * FROM sessions WHERE id=? AND expires>?',hash,Date.now());if(s)return {userId:s.user,displayName:s.name,email:s.email,fullName:s.name};}throw new AppError('Inicia sesión para continuar.',401);}
+export async function identity(){const token=(await cookies()).get('byron_session')?.value;if(token){const hash=await hashToken(token),s=await one('SELECT * FROM sessions WHERE id=? AND expires>?',hash,Date.now());if(s)return {userId:s.user,displayName:s.name,email:s.email,fullName:s.name};}const u=await getChatGPTUser();if(u)return u;throw new AppError('Inicia sesión para continuar.',401);}
 export async function hashToken(t:string){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))).map(x=>x.toString(16).padStart(2,'0')).join('');}
+const base64=(v:Uint8Array)=>btoa(String.fromCharCode(...v));
+const base64Bytes=(v:string)=>Uint8Array.from(atob(v),x=>x.charCodeAt(0));
+export async function passwordHash(password:string,salt:string){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:base64Bytes(salt),iterations:210000},key,256);return base64(new Uint8Array(bits));}
+export function passwordSalt(){return base64(crypto.getRandomValues(new Uint8Array(16)));}
+export function safeEqual(a:string,b:string){if(a.length!==b.length)return false;let result=0;for(let i=0;i<a.length;i++)result|=a.charCodeAt(i)^b.charCodeAt(i);return result===0;}
+export async function createSession(user:string,email:string,name:string){const token=uid()+uid();await run('INSERT INTO sessions(id,user,email,name,expires) VALUES(?,?,?,?,?)',await hashToken(token),user,email.toLowerCase(),name,Date.now()+7*86400000);return token;}
+export function sessionCookie(token:string,req:Request){return 'byron_session='+token+'; HttpOnly; SameSite=Lax; Path=/; Max-Age=604800'+(new URL(req.url).protocol==='https:'?'; Secure':'');}
 export async function all(sql:string,...params:any[]){return (await db().prepare(sql).bind(...params).all()).results as any[];}
 export async function one(sql:string,...params:any[]){return await db().prepare(sql).bind(...params).first() as any;}
 export async function run(sql:string,...params:any[]){return db().prepare(sql).bind(...params).run();}
