@@ -17,3 +17,5 @@
 .brand-mark{overflow:hidden;padding:3px;background:#fff}.brand-mark img{width:100%;height:100%;object-fit:contain;display:block}.institution-logo-preview{width:120px;max-height:80px;object-fit:contain;border:1px solid #dce5ee;border-radius:8px;padding:5px;background:#f8fafc}
 
 .report-preview{margin:18px 0 22px;border:1px solid #dce7ef;border-radius:10px;overflow:hidden;background:#fbfdff}.report-preview header{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#eef5fa}.report-preview header img{width:42px;height:42px;object-fit:contain;background:#fff;border-radius:7px;padding:3px}.report-preview header div{display:flex;flex-direction:column}.report-preview header span{font-size:10px;font-weight:700;letter-spacing:1px;color:#66869f}.report-preview header strong{font-size:14px;color:#254e70}.report-preview header small{font-size:11px}.report-preview table{font-size:11px}.report-preview th,.report-preview td{padding:9px 12px;white-space:normal}
+
+.format-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.format-options .btn{min-height:52px}
