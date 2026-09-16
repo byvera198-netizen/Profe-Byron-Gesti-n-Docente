@@ -135,3 +135,4 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+ .legal-page{min-height:100vh;background:#f4f7fb;color:#172033;padding:40px 20px;font-family:Arial,sans-serif}.legal-card{max-width:780px;margin:0 auto;background:#fff;border:1px solid #dce3ef;border-radius:18px;padding:40px;box-shadow:0 12px 35px rgba(20,37,63,.08)}.legal-back{display:inline-block;margin-bottom:28px;color:#165dca;font-weight:700;text-decoration:none}.legal-kicker{color:#165dca;font-weight:800;letter-spacing:.04em;margin:0 0 8px;text-transform:uppercase;font-size:.8rem}.legal-card h1{font-size:2rem;margin:0 0 4px}.legal-date{color:#65748b;margin:0 0 32px}.legal-card h2{font-size:1.15rem;margin:28px 0 8px}.legal-card p{line-height:1.65;margin:0}.legal-card a{color:#165dca}@media(max-width:600px){.legal-page{padding:20px 12px}.legal-card{padding:26px 22px}.legal-card h1{font-size:1.65rem}}
