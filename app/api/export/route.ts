@@ -8,16 +8,17 @@ const wordMime='application/vnd.openxmlformats-officedocument.wordprocessingml.d
 const quote=(v:any)=>'"'+String(v??'').replaceAll('"','""')+'"';
 
 function printable(v:any,numeric=false){return v==null?'Pendiente':numeric&&typeof v==='number'?v.toFixed(2):String(v);}
+function logoAsset(logo:any){const m=String(logo||'').match(/^data:image\/(png|jpeg);base64,(.+)$/);return m?{base64:m[2],extension:m[1]==='png'?'png':'jpeg',data:Uint8Array.from(atob(m[2]),x=>x.charCodeAt(0))}:null;}
 async function documentExport(institution:any,title:string,subtitle:string,headers:string[],rows:any[][]){
-  const {Document,Packer,Paragraph,Table,TableCell,TableRow,TextRun,HeadingLevel,WidthType,ShadingType}=await import('docx');
+  const docx:any=await import('docx'),{Document,Packer,Paragraph,Table,TableCell,TableRow,TextRun,HeadingLevel,WidthType,ShadingType,ImageRun,AlignmentType}=docx,logo=logoAsset(institution.settings.logo);
   const cell=(text:any,bold=false,shade?:string)=>new TableCell({shading:shade?{fill:shade,type:ShadingType.CLEAR}:undefined,children:[new Paragraph({children:[new TextRun({text:printable(text),bold,color:bold?'FFFFFF':undefined})]})]});
   const table=new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[new TableRow({children:headers.map(h=>cell(h,true,'123B63'))}),...rows.map(row=>new TableRow({children:row.map(v=>cell(v))}))]});
-  const doc=new Document({sections:[{children:[new Paragraph({text:institution.name,heading:HeadingLevel.TITLE}),new Paragraph({text:title,heading:HeadingLevel.HEADING_1}),new Paragraph({text:subtitle}),table,new Paragraph({text:'Documento generado por Profe. Byron Gestión Docente · '+new Date().toLocaleDateString('es-EC')})]}]});
+  const doc=new Document({sections:[{children:[...(logo?[new Paragraph({alignment:AlignmentType.RIGHT,children:[new ImageRun({data:logo.data,type:logo.extension==='png'?'png':'jpg',transformation:{width:70,height:70}})]})]:[]),new Paragraph({text:institution.name,heading:HeadingLevel.TITLE}),new Paragraph({text:title,heading:HeadingLevel.HEADING_1}),new Paragraph({text:subtitle}),table,new Paragraph({text:'Documento generado por Profe. Byron Gestión Docente · '+new Date().toLocaleDateString('es-EC')})]}]});
   return new Uint8Array(await Packer.toBuffer(doc));
 }
 async function spreadsheetExport(institution:any,title:string,subtitle:string,headers:string[],rows:any[][]){
   const ExcelJS=(await import('exceljs')).default,wb=new ExcelJS.Workbook(),ws=wb.addWorksheet('Informe');
-  wb.creator='Profe. Byron Gestión Docente';ws.addRow([institution.name]);ws.mergeCells(1,1,1,headers.length);ws.getCell('A1').font={bold:true,size:16,color:{argb:'FF123B63'}};
+  wb.creator='Profe. Byron Gestión Docente';ws.addRow([institution.name]);ws.mergeCells(1,1,1,headers.length);ws.getCell('A1').font={bold:true,size:16,color:{argb:'FF123B63'}};const logo=logoAsset(institution.settings.logo);if(logo){try{const image=wb.addImage({base64:logo.base64,extension:logo.extension});ws.addImage(image,{tl:{col:Math.max(0,headers.length-1),row:0},ext:{width:54,height:54}});ws.getRow(1).height=48;}catch{}}
   ws.addRow([title]);ws.mergeCells(2,1,2,headers.length);ws.getCell('A2').font={bold:true,size:12};ws.addRow([subtitle]);ws.mergeCells(3,1,3,headers.length);ws.getCell('A3').font={italic:true,color:{argb:'FF52667A'}};ws.addRow([]);const header=ws.addRow(headers);header.font={bold:true,color:{argb:'FFFFFFFF'}};header.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF123B63'}};rows.forEach(row=>ws.addRow(row));ws.columns=headers.map((h,i)=>({width:i===1?36:Math.max(14,Math.min(28,h.length+4))}));ws.views=[{state:'frozen',ySplit:5}];ws.pageSetup={orientation:headers.length>7?'landscape':'portrait',fitToPage:true,fitToWidth:1,fitToHeight:0};ws.eachRow((row,n)=>{row.alignment={wrapText:true,vertical:'middle'};row.height=n<5?22:28;if(n>5&&n%2===0)row.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF2F6FA'}};row.eachCell(c=>{if(n>5&&typeof c.value==='number')c.numFmt='0.00';});});return new Uint8Array(await wb.xlsx.writeBuffer());
 }
 async function pdfExport(institution:any,title:string,subtitle:string,headers:string[],rows:any[][]){
