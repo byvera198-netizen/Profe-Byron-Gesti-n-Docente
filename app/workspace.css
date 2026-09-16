@@ -21,3 +21,5 @@
 .format-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.format-options .btn{min-height:52px}
 
 .meeting-concentration{margin:22px 0;padding:18px 0 0}.meeting-concentration .section-heading{padding:0 18px}.meeting-concentration .table-note{padding:0 18px 14px}.meeting-concentration table{font-size:11px}.meeting-concentration th,.meeting-concentration td{padding:10px 12px}
+
+.paste-template{margin:14px 0 18px;padding:12px;border:1px solid #dce6ef;border-radius:8px;background:#f5f8fb;color:#51708a;font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow:auto}.bulk-textarea{min-height:220px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}
