@@ -6,7 +6,7 @@
     "directory": "dist/client"
   },
   "compatibility_date": "2026-05-15",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": ["nodejs_compat"],`n  "migrations_dir": "drizzle",
   "d1_databases": [
     {
       "binding": "DB",
@@ -18,4 +18,5 @@
     "APP_ORIGIN": "https://profe-byron-docente.byvera198.workers.dev"
   }
 }
+
 

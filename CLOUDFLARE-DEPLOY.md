@@ -13,3 +13,4 @@ La aplicación se despliega como un Worker con D1 y archivos estáticos.
 
 El enlace gratuito de producción será `https://profe-byron-docente.byvera198.workers.dev`.
 
+
