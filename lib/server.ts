@@ -6,7 +6,7 @@ export class AppError extends Error{constructor(message:string,public status=400
 export const uid=()=>crypto.randomUUID();
 export const now=()=>new Date().toISOString();
 export const parse=(r:any)=>({...r,...JSON.parse(r.payload||'{}')});
-export async function identity(){const token=(await cookies()).get('byron_session')?.value;if(token){const hash=await hashToken(token),s=await one('SELECT * FROM sessions WHERE id=? AND expires>?',hash,Date.now());if(s)return {userId:s.user,displayName:s.name,email:s.email,fullName:s.name};}const u=await getChatGPTUser();if(u)return u;throw new AppError('Inicia sesión para continuar.',401);}
+export async function identity(){const jar=await cookies(),token=jar.get('byron_session')?.value;if(token){const hash=await hashToken(token),s=await one('SELECT * FROM sessions WHERE id=? AND expires>?',hash,Date.now());if(s)return {userId:s.user,displayName:s.name,email:s.email,fullName:s.name};}if(jar.get('byron_signed_out')?.value==='1')throw new AppError('Inicia sesión para continuar.',401);const u=await getChatGPTUser();if(u)return u;throw new AppError('Inicia sesión para continuar.',401);}
 export async function hashToken(t:string){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))).map(x=>x.toString(16).padStart(2,'0')).join('');}
 const base64=(v:Uint8Array)=>btoa(String.fromCharCode(...v));
 const base64Bytes=(v:string)=>Uint8Array.from(atob(v),x=>x.charCodeAt(0));
