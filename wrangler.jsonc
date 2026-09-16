@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "profe-byron-docente",
+  "main": "dist/server/index.js",
+  "assets": {
+    "directory": "dist/client"
+  },
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "profe-byron-docente-db",
+      "database_id": "REEMPLAZAR_CON_ID_DE_D1"
+    }
+  ],
+  "vars": {
+    "APP_ORIGIN": "https://profe-byron-docente.byvera198.workers.dev"
+  }
+}
