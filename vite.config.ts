@@ -63,6 +63,7 @@ export default defineConfig(async ({ command }) => {
         inspectorPort: false,
         config: {
           ...localBindingConfig,
+          compatibility_flags: command === "build" ? [] : localBindingConfig.compatibility_flags,
           d1_databases: command === "build" ? [] : localBindingConfig.d1_databases,
         },
       }),
