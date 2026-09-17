@@ -23,3 +23,5 @@
 .meeting-concentration{margin:22px 0;padding:18px 0 0}.meeting-concentration .section-heading{padding:0 18px}.meeting-concentration .table-note{padding:0 18px 14px}.meeting-concentration table{font-size:11px}.meeting-concentration th,.meeting-concentration td{padding:10px 12px}
 
 .paste-template{margin:14px 0 18px;padding:12px;border:1px solid #dce6ef;border-radius:8px;background:#f5f8fb;color:#51708a;font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow:auto}.bulk-textarea{min-height:220px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}
+
+.logo-upload{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:15px;margin:4px 0 19px;border:1px dashed #b9cad9;border-radius:9px;background:#f8fbfe}.logo-upload>div{flex:1;min-width:210px}.logo-upload strong{display:block;font-size:13px;color:#315773}.logo-upload p{margin-top:4px;font-size:11px;line-height:1.55;color:#8095a8}.logo-upload .upload-btn{position:relative;overflow:hidden}.logo-upload .upload-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}.logo-upload .institution-logo-preview{margin-left:auto}
