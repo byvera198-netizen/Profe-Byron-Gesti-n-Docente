@@ -11,6 +11,6 @@ La aplicación se despliega como un Worker con D1 y archivos estáticos.
 5. Configura los secretos `TOKEN_ENCRYPTION_KEY`, `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` con `npx wrangler secret put`.
 6. Publica con `npx wrangler deploy`.
 
-El enlace gratuito de producción será `https://profe-byron-docente.byvera198.workers.dev`.
+El enlace gratuito de producción será `https://gestiondocente.profebyron.workers.dev`.
 
 

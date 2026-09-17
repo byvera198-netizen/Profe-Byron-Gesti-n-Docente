@@ -6,7 +6,7 @@
 
 La plataforma está pensada para que cada institución gestione sus datos de forma independiente. Sus usuarios trabajan con permisos según su rol y cada docente solo accede a las asignaturas y cursos que le corresponden, salvo las autoridades autorizadas.
 
-- Aplicación publicada: <https://profe-byron-docente.byvera198.workers.dev/>
+- Aplicación publicada: <https://gestiondocente.profebyron.workers.dev/>
 - Repositorio: <https://github.com/byvera198-netizen/Profe-Byron-Gesti-n-Docente>
 - Infraestructura: Cloudflare Workers y base de datos Cloudflare D1.
 

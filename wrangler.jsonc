@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "profe-byron-docente",
+  "name": "gestiondocente",
   "main": "dist/server/index.js",
   "assets": {
     "directory": "dist/client"
@@ -15,7 +15,7 @@
     }
   ],
   "vars": {
-    "APP_ORIGIN": "https://profe-byron-docente.byvera198.workers.dev"
+    "APP_ORIGIN": "https://gestiondocente.profebyron.workers.dev"
   }
 }
 
