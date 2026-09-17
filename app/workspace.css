@@ -75,3 +75,6 @@
 
 /* Menú lateral: el contenido completo sigue disponible en pantallas bajas. */
 .sidebar{height:100dvh;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#5a7793 #12304d}.sidebar::-webkit-scrollbar{width:8px}.sidebar::-webkit-scrollbar-track{background:#12304d}.sidebar::-webkit-scrollbar-thumb{background:#5a7793;border:2px solid #12304d;border-radius:999px}.sidebar nav,.sidebar-bottom{flex-shrink:0}
+
+/* En móvil las tablas se desplazan dentro de su panel y mantienen visible la barra horizontal. */
+@media(max-width:780px){.table-scroll{max-height:62dvh;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable both-edges;-webkit-overflow-scrolling:touch}.table-scroll::-webkit-scrollbar{width:9px;height:11px}.table-scroll::-webkit-scrollbar-track{background:#edf3f7}.table-scroll::-webkit-scrollbar-thumb{background:#7f9bb3;border:2px solid #edf3f7;border-radius:999px}.table-scroll table{min-width:max-content}.table-scroll th,.table-scroll td{white-space:nowrap}}
