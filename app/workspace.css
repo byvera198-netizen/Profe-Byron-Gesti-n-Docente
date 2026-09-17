@@ -64,3 +64,6 @@
 
 .attendance-absence-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:20px 22px 10px}.attendance-absence-heading h3{font-size:15px;color:#294d6c}.attendance-absence-heading span{font-size:11px;color:#7890a5}.attendance-absence-table{border-top:1px solid #e7eef4}
 @media(max-width:780px){.attendance-absence-heading{align-items:flex-start;flex-direction:column;gap:5px}}
+
+.report-export-menu{display:flex;align-items:flex-end;gap:9px;flex-wrap:wrap}.report-export-menu label{display:flex;flex-direction:column;gap:5px;font-size:10px;font-weight:600;color:#8193a4}.report-export-menu select{min-width:205px;height:41px;font-size:12px}
+@media(max-width:780px){.report-export-menu{width:100%}.report-export-menu label,.report-export-menu .btn{width:100%}.report-export-menu select{width:100%}}
